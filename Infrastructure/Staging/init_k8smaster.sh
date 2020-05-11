@@ -27,6 +27,5 @@ rm ./get_helm.sh
 
 # Install Gitlab runner
 echo "[TASK 6] Install Gitlab runner"
-helm install gitlab gitlab/gitlab-runner
 # Get your URL and Registration Token from GitLab Settings > CI / CD > Runners
-helm upgrade gitlab --set gitlabUrl=https://gitlab.com/,runnerRegistrationToken=gVe3w6AtNSmsyfzvZ167 gitlab/gitlab-runner
+helm install --namespace kube-system gitlab gitlab/gitlab-runner --set gitlabUrl=<gitlabURL>,runnerRegistrationToken=<gitlab-token>,rbac.create=true,rbac.clusterWideAccess=true,runners.namespace=spa
