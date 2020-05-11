@@ -1,0 +1,9 @@
+image: node
+
+stages:
+  - build
+
+build website:
+  stage: build
+  script:
+    - echo $CI_COMMIT_SHORT_SHA  

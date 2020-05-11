@@ -17,3 +17,16 @@ su - vagrant -c "kubectl create -f https://docs.projectcalico.org/manifests/cali
 # Generate Cluster join command
 echo "[TASK 4] Generate and save cluster join command to /joincluster.sh"
 kubeadm token create --print-join-command > /joincluster.sh
+
+# Install Helm
+echo "[TASK 5] Install Helm"
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+rm ./get_helm.sh
+
+# Install Gitlab runner
+echo "[TASK 6] Install Gitlab runner"
+helm install gitlab gitlab/gitlab-runner
+# Get your URL and Registration Token from GitLab Settings > CI / CD > Runners
+helm upgrade gitlab --set gitlabUrl=https://gitlab.com/,runnerRegistrationToken=gVe3w6AtNSmsyfzvZ167 gitlab/gitlab-runner
