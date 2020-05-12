@@ -2,8 +2,22 @@ image: node
 
 stages:
   - build
+  - test
 
-build website:
-  stage: build
+variables:
+    CLI_VERSION: 4.4.1
+    IMAGE: hello-spa:latest
+  
+test:karma:
+  stage: test
+  image: trion/ng-cli-karma:${CLI_VERSION}
+  allow_failure: false
   script:
-    - echo $CI_COMMIT_SHORT_SHA  
+  - ng test --progress false --watch false
+  
+build-image:
+  stage: build
+  image: docker
+  script:
+    - docker build -t $IMAGE .
+    - docker push $IMAGE
