@@ -1,6 +1,8 @@
 stages:
   - build
   - test
+  - deploy staging
+  - deploy production
 
 cache: 
   key: ${CI_COMMIT_REF_SLUG}
@@ -41,12 +43,16 @@ build-image:
     - docker
 
 deploy staging:
+  stage: deploy staging
   environment:
     name: staging
+  script:
+    - echo "Deploy to staging"
   only:
     - develop
 
 deploy production:
+  stage: deploy production
   environment: 
     name: production
   image: python:latest
@@ -55,7 +61,6 @@ deploy production:
     - aws s3 cp ./ s3://$S3_BUCKET_NAME/ --recursive --exclude "*" --include "*.html"
   when: manual
   allow_failure: false
-
   only:
     - master
 
