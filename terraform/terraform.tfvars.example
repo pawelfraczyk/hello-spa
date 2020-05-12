@@ -1,0 +1,4 @@
+project            = "spa"
+stage              = "prod"
+region             = "eu-central-1"
+domain             = "spa.fraczyk.eu"
