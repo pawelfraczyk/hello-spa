@@ -49,7 +49,7 @@ build production:
     name: production
   image: node
   before_script:
-    - npm update && npm install -g @angular/cli
+    - npm install -g @angular/cli@9.1.0
   script:
     - npm install
     - ng build --prod
