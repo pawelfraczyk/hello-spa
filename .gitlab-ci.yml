@@ -2,20 +2,29 @@ stages:
   - build
   - test
 
+cache: 
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+  policy: pull
+
 variables:
   CLI_VERSION: 9.1.5
-  REPOSITORY_URL: 439352748066.dkr.ecr.eu-central-1.amazonaws.com/hello-spa
+  REPOSITORY_URL: 439352748066.dkr.ecr.eu-central-1.amazonaws.com/spa:develop
+  S3_BUCKET_NAME: "spa-prod-app-bucket"
   
 test:karma:
   stage: test
   image: trion/ng-cli-karma:${CLI_VERSION}
   allow_failure: false
   script:
-  - npm install
-  - ng test --progress false --watch false
+    - npm install
+    - ng test --progress false --watch false
   
 build-image:
   stage: build
+  environment:
+    name: staging
   image: docker
   services:
     - docker:dind
@@ -26,5 +35,37 @@ build-image:
     - $(aws ecr get-login --no-include-email --region eu-central-1)
     - docker build -t $REPOSITORY_URL .
     - docker push $REPOSITORY_URL
+  only:
+    - develop
   tags:
     - docker
+
+deploy staging:
+  environment:
+    name: staging
+  only:
+    - develop
+
+deploy production:
+  environment: 
+    name: production
+  image: python:latest
+  script:
+    - pip install awscli
+    - aws s3 cp ./ s3://$S3_BUCKET_NAME/ --recursive --exclude "*" --include "*.html"
+  when: manual
+  allow_failure: false
+
+  only:
+    - master
+
+update cache:
+  script:
+    - npm install
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: push
+  only:
+    - schedules

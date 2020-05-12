@@ -47,3 +47,7 @@ Thumbs.db
 
 # vagrant files
 **/.vagrant
+
+# terraform
+**/.terraform
+**/*.tfvars
