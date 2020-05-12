@@ -47,7 +47,7 @@ build production:
   stage: build production
   environment: 
     name: production
-  image: node:12-alpine
+  image: node
   before_script:
     - npm update && npm install -g @angular/cli
   script:
