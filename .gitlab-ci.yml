@@ -1,5 +1,6 @@
 stages:
-  - build
+  - build docker image
+  - build production
   - test
   - deploy staging
   - deploy production
@@ -23,8 +24,8 @@ test:karma:
     - npm install
     - ng test --progress false --watch false
   
-build-image:
-  stage: build
+build docker image:
+  stage: build docker image
   environment:
     name: staging
   image: docker
@@ -42,6 +43,22 @@ build-image:
   tags:
     - docker
 
+build production:
+  stage: build production
+  environment: 
+    name: production
+  image: node:12-alpine
+  before_script:
+    - npm update && npm install -g @angular/cli
+  script:
+    - npm install
+    - ng build --prod
+  artifacts:
+    paths:
+      - ./dist
+  only:
+    - master
+
 deploy staging:
   stage: deploy staging
   environment:
@@ -58,7 +75,8 @@ deploy production:
   image: python:latest
   script:
     - pip install awscli
-    - aws s3 cp ./ s3://$S3_BUCKET_NAME/ --recursive --exclude "*" --include "*.html"
+    - cd ./dist
+    - aws s3 sync . s3://$S3_BUCKET_NAME/
   when: manual
   allow_failure: false
   only:
