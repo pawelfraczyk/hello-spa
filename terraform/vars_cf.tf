@@ -1,25 +1,5 @@
-variable "cf_origin_http_port" {
-  default = 80
-  type    = number
-}
-
-variable "cf_origin_https_port" {
-  default = 443
-  type    = number
-}
-
-variable "cf_origin_ssl_protocols" {
-  type    = list(string)
-  default = ["TLSv1", "TLSv1.1", "TLSv1.2"]
-}
-
-variable "cf_origin_protocol_policy" {
-  default = "https-only"
-}
-
-variable "cf_origin_keepalive_timeout" {
-  default = 60
-  type    = number
+variable "cf_origin_id" {
+    default = "website"
 }
 
 variable "cf_enabled" {

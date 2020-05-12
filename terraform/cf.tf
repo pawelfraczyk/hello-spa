@@ -1,23 +1,14 @@
-locals {
-  app_origin_id = "${var.project}-${var.stage}-origin"
-}
-
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "${var.project}-${var.stage} origin access identity"
 }
 
 resource "aws_cloudfront_distribution" "default_distribution" {
   origin {
-    domain_name = aws_s3_bucket.custom_bucket.bucket_regional_domain_name
-    origin_id   = local.app_origin_id
+    domain_name = aws_s3_bucket.custom_bucket.bucket_regional_domain_name 
+    origin_id   = var.cf_origin_id
 
-    custom_origin_config {
-      http_port                = var.cf_origin_http_port
-      https_port               = var.cf_origin_https_port
-      origin_ssl_protocols     = var.cf_origin_ssl_protocols
-      origin_protocol_policy   = var.cf_origin_protocol_policy
-      origin_keepalive_timeout = var.cf_origin_keepalive_timeout
-      origin_read_timeout      = var.cf_origin_keepalive_timeout
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
     }
   }
 
@@ -32,7 +23,7 @@ resource "aws_cloudfront_distribution" "default_distribution" {
   default_cache_behavior {
     allowed_methods  = var.cf_default_cache_behavior_allowed_methods
     cached_methods   = var.cf_default_cache_behavior_cached_methods
-    target_origin_id = local.app_origin_id
+    target_origin_id = var.cf_origin_id
 
     forwarded_values {
       query_string = var.cf_default_cache_behavior_forwarded_values_query_string

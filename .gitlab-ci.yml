@@ -75,7 +75,7 @@ deploy production:
   image: python:latest
   script:
     - pip install awscli
-    - cd ./dist
+    - cd ./dist/hello-spa
     - aws s3 sync . s3://$S3_BUCKET_NAME/
   when: manual
   allow_failure: false
