@@ -64,7 +64,7 @@ variable "cf_default_cache_behavior_viewer_protocol_policy" {
 }
 
 variable "cf_price_class" {
-  default = "PriceClass_200"
+  default = "PriceClass_100"
   type    = string
 }
 
