@@ -63,8 +63,10 @@ deploy staging:
   stage: deploy staging
   environment:
     name: staging
+  image: alpine/helm:latest
   script:
-    - echo "Deploy to staging"
+    - helm init --client-only
+    - helm upgrade -i spa ./spa
   only:
     - develop
 
