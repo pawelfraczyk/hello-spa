@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "spa.fullname" . }}
+  labels:
+{{ include "spa.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  externalIPs:
+    - 172.20.1.100
+    - 172.20.1.101
+    - 172.20.1.102
+  selector:
+    app.kubernetes.io/name: {{ include "spa.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
