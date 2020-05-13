@@ -40,8 +40,6 @@ build docker image:
     - docker push $REPOSITORY_URL
   only:
     - develop
-  tags:
-    - docker
 
 build production:
   stage: build production
