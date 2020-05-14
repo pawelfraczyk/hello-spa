@@ -13,8 +13,8 @@ cache:
 
 variables:
   CLI_VERSION: 9.1.5
-  REPOSITORY_URL: 439352748066.dkr.ecr.eu-central-1.amazonaws.com/spa:develop
-  S3_BUCKET_NAME: "spa-prod-app-bucket"
+  REPOSITORY_URL: <PUT YOUR ECR URL HERE>
+  S3_BUCKET_NAME: "<S3 BUCKET NAME>"
   
 test:karma:
   stage: test

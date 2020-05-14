@@ -3,7 +3,7 @@
 # Print trace
 set -x -o errexit
 
-#After setting up the bucket and DynamoDb make sure that the same variables are used in backend.tf
+#After setting up the bucket and DynamoDb make sure that the same variables are used in provider.tf
 REGION="eu-central-1"
 BUCKET_NAME=spa-prod-infrastructure
 LOCKS_TABLE=spa-prod-tf-locks

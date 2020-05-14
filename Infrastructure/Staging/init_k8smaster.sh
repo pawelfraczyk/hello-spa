@@ -12,11 +12,11 @@ chown -R vagrant:vagrant /home/vagrant/.kube
 
 # Deploy flannel network
 echo "[TASK 3] Deploy Calico network"
-su - vagrant -c "kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml >> /root/kubeinit.log 2>/dev/null"
+su - vagrant -c "kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml"
 
 # Generate Cluster join command
 echo "[TASK 4] Generate and save cluster join command to /joincluster.sh"
-kubeadm token create --print-join-command > /joincluster.sh >> /root/kubeinit.log 2>/dev/null
+kubeadm token create --print-join-command > /joincluster.sh
 
 # Install Helm
 echo "[TASK 5] Install Helm"
@@ -38,10 +38,10 @@ echo "[TASK 7] Install aws-ecr-credential"
 su - vagrant -c "helm repo add architectminds https://architectminds.github.io/helm-charts/"
 # Replace your AWS data & credentials here
 su - vagrant -c "helm install aws-ecr-credential architectminds/aws-ecr-credential  \
-  --set-string aws.account=439352748066  \
-  --set aws.region=eu-central-1  \
-  --set aws.accessKeyId=QUtJQVdNUzNXNUFSTDJCWlFUV0k=  \
-  --set aws.secretAccessKey=dHdMaGFjdTBZL2s4K2U4RE1kLzRqblpGTnU1NzlWYTZGT21XckptSQ==  \
+  --set-string aws.account=<account number>  \
+  --set aws.region=<aws region>  \
+  --set aws.accessKeyId=<base64>  \
+  --set aws.secretAccessKey=<base64>  \
   --set targetNamespace=default"
 
 # Add permissions to gitlab user to dpeloy

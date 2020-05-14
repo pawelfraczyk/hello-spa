@@ -1,32 +1,31 @@
-USER-SUPPLIED VALUES:
-  gitlabUrl: <put your URL here>
-  rbac:
-    clusterWideAccess: true
-    create: true
-    serviceAccountName: default
-  runnerRegistrationToken: <Put your token here>
-  runners:
-    namespace: default
-    privileged: true
-    serviceAccountName: default
-    builds:
-      # cpuLimit: 300m
-      # memoryLimit: 512Mi
-      cpuRequests: 250m
-      memoryRequests: 400Mi
-  
-    ## Service Container specific configuration
-    ##
-    services:
-      # cpuLimit: 300m
-      # memoryLimit: 512Mi
-      cpuRequests: 250m
-      memoryRequests: 400Mi
-  
-    ## Helper Container specific configuration
-    ##
-    helpers:
-      # cpuLimit: 300m
-      # memoryLimit: 512Mi
-      cpuRequests: 250m
-      memoryRequests: 400Mi
+gitlabUrl: <put your URL here>
+rbac:
+  clusterWideAccess: true
+  create: true
+  serviceAccountName: default
+runnerRegistrationToken: <Put your token here>
+runners:
+  namespace: default
+  privileged: true
+  serviceAccountName: default
+  builds:
+    # cpuLimit: 300m
+    # memoryLimit: 512Mi
+    cpuRequests: 250m
+    memoryRequests: 400Mi
+
+  ## Service Container specific configuration
+  ##
+  services:
+    # cpuLimit: 300m
+    # memoryLimit: 512Mi
+    cpuRequests: 250m
+    memoryRequests: 400Mi
+
+  ## Helper Container specific configuration
+  ##
+  helpers:
+    # cpuLimit: 300m
+    # memoryLimit: 512Mi
+    cpuRequests: 250m
+    memoryRequests: 400Mi
