@@ -12,14 +12,15 @@ chown -R vagrant:vagrant /home/vagrant/.kube
 
 # Deploy flannel network
 echo "[TASK 3] Deploy Calico network"
-su - vagrant -c "kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml"
+su - vagrant -c "kubectl create -f https://docs.projectcalico.org/manifests/calico.yaml >> /root/kubeinit.log 2>/dev/null"
 
 # Generate Cluster join command
 echo "[TASK 4] Generate and save cluster join command to /joincluster.sh"
-kubeadm token create --print-join-command > /joincluster.sh
+kubeadm token create --print-join-command > /joincluster.sh >> /root/kubeinit.log 2>/dev/null
 
 # Install Helm
 echo "[TASK 5] Install Helm"
+export PATH=$PATH:/usr/local/bin
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh
@@ -27,7 +28,22 @@ rm ./get_helm.sh
 
 # Install Gitlab runner
 echo "[TASK 6] Install Gitlab runner"
-# Get your URL and Registration Token from GitLab Settings > CI / CD > Runners
-helm repo add gitlab https://charts.gitlab.io/
-helm repo update
-helm install --namespace kube-system gitlab gitlab/gitlab-runner --set gitlabUrl=<gitlabURL>,runnerRegistrationToken=<gitlab-token>,rbac.create=true,rbac.clusterWideAccess=true,runners.namespace=spa
+# Get your URL and Registration Token from GitLab Settings > CI / CD > Runners and change <gitlabURL> & <gitlab-token>
+su - vagrant -c "helm repo add gitlab https://charts.gitlab.io/"
+su - vagrant -c "helm repo update"
+su - vagrant -c "helm install --namespace kube-system gitlab -f /vagrant/values.yaml gitlab/gitlab-runner"
+
+# Install aws-ecr-credential
+echo "[TASK 7] Install aws-ecr-credential"
+su - vagrant -c "helm repo add architectminds https://architectminds.github.io/helm-charts/"
+# Replace your AWS data & credentials here
+su - vagrant -c "helm install aws-ecr-credential architectminds/aws-ecr-credential  \
+  --set-string aws.account=439352748066  \
+  --set aws.region=eu-central-1  \
+  --set aws.accessKeyId=QUtJQVdNUzNXNUFSTDJCWlFUV0k=  \
+  --set aws.secretAccessKey=dHdMaGFjdTBZL2s4K2U4RE1kLzRqblpGTnU1NzlWYTZGT21XckptSQ==  \
+  --set targetNamespace=default"
+
+# Add permissions to gitlab user to dpeloy
+echo "[TASK 8] Create clusterrolebinding for gitlab-runner role"
+su - vagrant -c "kubectl create clusterrolebinding default-admin-ecr   --clusterrole=cluster-admin   --serviceaccount=default:default   --namespace=aws-ecr-credential-ns"

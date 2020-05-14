@@ -2,6 +2,8 @@
 .git
 # Ignores all locally installed packages
 node_modules/
+Infrastructure/
+spa/
 
 # Ignores build artifacts
-dist
+dist/

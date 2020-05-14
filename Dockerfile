@@ -1,6 +1,6 @@
 ## Build Image
 FROM node:12-alpine AS build
-RUN npm update && npm install -g @angular/cli
+RUN npm install -g @angular/cli@9.1.0
 WORKDIR /app
 COPY package.json ./
 RUN npm install

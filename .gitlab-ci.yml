@@ -1,6 +1,6 @@
 stages:
-  - build docker image
   - build production
+  - build docker image
   - test
   - deploy staging
   - deploy production
@@ -28,10 +28,15 @@ build docker image:
   stage: build docker image
   environment:
     name: staging
-  image: docker
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ''
+  image: docker:19.03
   services:
-    - docker:dind
+    - docker:19.03-dind
   before_script:
+    - docker info
     - apk add --no-cache curl jq python py-pip
     - pip install awscli
   script:
@@ -45,7 +50,7 @@ build production:
   stage: build production
   environment: 
     name: production
-  image: node
+  image: node:12-alpine
   before_script:
     - npm install -g @angular/cli@9.1.0
   script:
@@ -63,7 +68,6 @@ deploy staging:
     name: staging
   image: alpine/helm:latest
   script:
-    - helm init --client-only
     - helm upgrade -i spa ./spa
   only:
     - develop
